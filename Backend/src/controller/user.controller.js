@@ -13,16 +13,16 @@ const generateAccessAndRefreshToken = async (userId) => {
 
         user.refreshToken = refreshToken;
 
-        // when we use save() method is used then all the fields are neccesary so to avoid that we have to pass an object with property {validatBeforeSave:false}
         await user.save({ validateBeforeSave: false });
 
         return { accessToken, refreshToken }
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating refresh and access token");
+        throw new ApiError(500, "Something went wrong while generating refresh and access token okyyyy");
     }
 }
 
 const registerUser = asyncHandler(async (req, res) => {
+
     const { userName, email, password } = req.body;
 
     if (!userName?.trim() || !email?.trim() || !password?.trim()) {
@@ -62,6 +62,8 @@ const loginUser = asyncHandler(async (req, res) => {
     const { email, password, FCMToken } = req.body;
 
     if (!email && !password) {
+
+
         throw new ApiError(400, "All fields are required");
     }
 
