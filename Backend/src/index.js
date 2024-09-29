@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import axios from 'axios'; // Import Axios
 import mongoose from 'mongoose';
 import Alumni from './models/alumni.js';
-import { Configuration, OpenAIApi } from 'openai'; // Correctly import named exports
 
 dotenv.config();
 
@@ -15,11 +15,6 @@ app.use(cors());
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('Connected to MongoDB'))
     .catch((err) => console.error('MongoDB connection error:', err));
-
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
 
 app.post('/api/mentor-search', async (req, res) => {
     const { prompt } = req.body;
@@ -43,11 +38,17 @@ app.post('/api/mentor-search', async (req, res) => {
             ${alumniProfiles}
         `;
 
-        const response = await openai.createCompletion({
-            model: 'text-davinci-003',
+        // Send a request to the Gemini API
+        const response = await axios.post('https://api.gemini.ai/v1/chat/completions', {
             prompt: finalPrompt,
+            model: 'gpt-4', // Change the model name if needed
             max_tokens: 200,
             temperature: 0.7,
+        }, {
+            headers: {
+                'Authorization': `Bearer ${process.env.GEMINI_API_KEY}`, // Use your actual API key
+                'Content-Type': 'application/json'
+            }
         });
 
         const aiResponse = response.data.choices[0].text.trim();
