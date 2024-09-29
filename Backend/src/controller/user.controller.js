@@ -17,11 +17,12 @@ const generateAccessAndRefreshToken = async (userId) => {
 
         return { accessToken, refreshToken }
     } catch (error) {
-        throw new ApiError(500, "Something went wrong while generating refresh and access token");
+        throw new ApiError(500, "Something went wrong while generating refresh and access token okyyyy");
     }
 }
 
 const registerUser = asyncHandler(async (req, res) => {
+
     const { userName, email, password } = req.body;
 
     if (!userName?.trim() || !email?.trim() || !password?.trim()) {
